@@ -3,12 +3,17 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from response import create_response
 from django.db import transaction
 from decimal import Decimal
 from .serializers import FacturaSerializer
 from .models import Factura, ItemFactura, UltimoNumeroFactura
 from producto.models import Producto
 from cliente.models import Cliente
+from io import BytesIO
+import base64
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 
 # Create your views here.
@@ -24,7 +29,8 @@ def factura_create(request):
             try:
                 cliente = Cliente.objects.get(pk=cliente_id)
             except Cliente.DoesNotExist:
-                return Response({"error": f"Cliente con ID {cliente_id} no encontrado."}, status=400)
+                response = create_response('error', 400, f"Cliente con ID {cliente_id} no encontrado.")
+                return Response(response, status=400)
 
             # Lógica para generar campos como numero, numeracion, establecimiento, punto_expedicion, etc.
             ultimo_numero = UltimoNumeroFactura.objects.first()
@@ -75,7 +81,8 @@ def factura_create(request):
                 try:
                     producto = Producto.objects.get(pk=producto_id)
                 except Producto.DoesNotExist:
-                    return Response({"error": f"Producto con ID {producto_id} no encontrado."}, status=400)
+                    response = create_response('error', 400, f"Producto con ID {producto_id} no encontrado.")
+                    return Response(response, status=400)
 
                 precio_unitario = producto.precio
                 total = precio_unitario * cantidad
@@ -118,7 +125,8 @@ def factura_create(request):
             ultimo_numero.ultimo_numero = numero
             ultimo_numero.save()
 
-            return Response(serializer.data)
+            response = create_response('success', 201, "Factura creada correctamente.", serializer.data)
+            return Response(response, status=201)
     
     return Response(serializer.errors)
 
@@ -127,7 +135,9 @@ def factura_create(request):
 def factura_list(request):
     facturas = Factura.objects.all()
     serializer = FacturaSerializer(facturas, many=True)
-    return Response(serializer.data)
+
+    response = create_response('success', 200, "Lista de facturas obtenida correctamente.", serializer.data)
+    return Response(response)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -140,9 +150,12 @@ def factura_update(request):
                 try:
                     factura = Factura.objects.get(pk=factura_id)
                 except Factura.DoesNotExist:
-                    return Response({"error": f"Factura con ID {factura_id} no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+
+                    response = create_response('error', 404, f"Factura con ID {factura_id} no encontrada.")
+                    return Response(response, status=404)
             else:
-                return Response({"error": "No se proporcionó el ID de la factura."}, status=status.HTTP_400_BAD_REQUEST)
+                response = create_response('error', 400, "No se proporcionó el ID de la factura.")
+                return Response(response, status=400)
 
             # Restaurar los totales a 0 antes de recalcularlos
             factura.total_iva_5 = 0
@@ -161,7 +174,8 @@ def factura_update(request):
                 try:
                     producto = Producto.objects.get(pk=producto_id)
                 except Producto.DoesNotExist:
-                    return Response({"error": f"Producto con ID {producto_id} no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+                    response = create_response('error', 404, f"Producto con ID {producto_id} no encontrado.")
+                    return Response(response, status=404) 
 
                 precio_unitario = producto.precio
                 total = precio_unitario * cantidad
@@ -188,7 +202,8 @@ def factura_update(request):
                         item.iva_10 = total if producto.iva == '10' else 0
                         item.save()
                     except ItemFactura.DoesNotExist:
-                        return Response({"error": f"Ítem con ID {item_id} no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+                        response = create_response('error', 404, f"Ítem con ID {item_id} no encontrado.")
+                        return Response(response, status=404)
                 else:
                     ItemFactura.objects.create(
                         factura=factura,
@@ -206,9 +221,11 @@ def factura_update(request):
             factura.total = factura.sub_total + factura.total_iva
             factura.save()
 
-            return Response(serializer.data)
+            response = create_response('success', 200, "Factura actualizada correctamente.", serializer.data)
+            return Response(response, status=200)
     
-    return Response(serializer.errors)
+    response = create_response('error', 400, "Error al actualizar la factura.", serializer.errors)
+    return Response(response, status=400)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -216,7 +233,8 @@ def factura_delete(request, factura_id):
     try:
         factura = Factura.objects.get(pk=factura_id)
     except Factura.DoesNotExist:
-        return Response({"error": f"Factura con ID {factura_id} no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+        response = create_response('error', 404, f"Factura con ID {factura_id} no encontrada.")
+        return Response(response, status=404)
 
     # Eliminar los ítems de la factura
     factura.items.all().delete()
@@ -224,6 +242,53 @@ def factura_delete(request, factura_id):
     # Eliminar la factura
     factura.delete()
 
-    return Response({"message": f"Factura con ID {factura_id} eliminada correctamente."}, status=status.HTTP_204_NO_CONTENT)
+    response = create_response('success', 204, f"Factura con ID {factura_id} eliminada correctamente.")
+    return Response(response, status=204)
 
+@api_view(['GET'])
+def generar_reporte(request):
+
+    facturas = Factura.objects.all()
+
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    c.drawString(100, 750, 'Reporte de facturas')
+    y = 700
+    for factura in facturas:
+        y -= 20
+        c.drawString(100, y, f'Número: {factura.numeracion}')
+        y -= 20
+        c.drawString(100, y, f'Cliente: {factura.cliente.nombre}')
+        y -= 20
+        c.drawString(100, y, f'Fecha de emisión: {factura.fecha_emision}')
+        y -= 20
+        c.drawString(100, y, f'Total: {factura.total}')
+        y -= 20
+        c.drawString(100, y, f'Total IVA 5%: {factura.total_iva_5}')
+        y -= 20
+        c.drawString(100, y, f'Total IVA 10%: {factura.total_iva_10}')
+        y -= 20
+        c.drawString(100, y, f'Total IVA: {factura.total_iva}')
+        y -= 20
+        c.drawString(100, y, f'Subtotal: {factura.sub_total}')
+        y -= 20
+        c.drawString(100, y, f'Subtotal IVA: {factura.sub_total_iva}')
+        y -= 20
+        c.drawString(100, y, f'Subtotal IVA 5%: {factura.sub_total_iva_5}')
+        y -= 20
+        c.drawString(100, y, f'Subtotal IVA 10%: {factura.sub_total_iva_10}')
+        y -= 20
+        c.drawString(100, y, 'Ítems:')
+        y -= 20
+        items = ItemFactura.objects.filter(factura=factura)
+        for item in items:
+            c.drawString(120, y, f'{item.producto.nombre} - Cantidad: {item.cantidad} - Precio unitario: {item.precio_unitario}')
+            y -= 20
+    c.save()
+
+    pdf = buffer.getvalue()
+    base64_pdf = base64.b64encode(pdf).decode('utf-8')
+
+    response = create_response('success', 200, "Reporte de facturas generado correctamente.", base64_pdf)
+    return Response(response, status=200)
 

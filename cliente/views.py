@@ -2,8 +2,13 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from response import create_response
 from .models import Cliente
 from .serializers import ClienteSerializer
+from io import BytesIO
+import base64
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 # Create your views here.
 
@@ -13,7 +18,9 @@ from .serializers import ClienteSerializer
 def cliente_list(request):
     clientes = Cliente.objects.all()
     serializer = ClienteSerializer(clientes, many=True)
-    return Response(serializer.data)
+
+    response = create_response('success', 'Clientes listados', serializer.data)
+    return Response(response, status=200)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -21,8 +28,12 @@ def cliente_create(request):
     serializer = ClienteSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors)
+
+        response = create_response('success', 'Cliente creado', serializer.data)
+        return Response(response, status=201)
+    
+    response = create_response('error', 'Error al crear cliente', serializer.errors)
+    return Response(response, status=400)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -31,12 +42,49 @@ def cliente_update(request, pk):
     serializer = ClienteSerializer(instance=cliente, data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors)
+
+        response = create_response('success', 'Cliente actualizado', serializer.data)
+        return Response(response, status=200)
+    
+    response = create_response('error', 'Error al actualizar cliente', serializer.errors)
+    return Response(response, status=400)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def cliente_delete(request, pk):
     cliente = Cliente.objects.get(id=pk)
     cliente.delete()
-    return Response('Cliente eliminado')
+
+    response = create_response('success', 'Cliente eliminado', None)
+    return Response(response, status=200)   
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def generar_reporte(request):
+    clientes = Cliente.objects.all()
+
+    # Generar el PDF utilizando ReportLab
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    c.drawString(100, 750, 'Reporte de clientes')
+    y = 700
+    for cliente in clientes:
+        y -= 20
+        c.drawString(100, y, f'Nombre: {cliente.nombre}')
+        y -= 20
+        c.drawString(100, y, f'Email: {cliente.email}')
+        y -= 20
+        c.drawString(100, y, f'Telefono: {cliente.telefono}')
+        y -= 20
+        c.drawString(100, y, f'Direccion: {cliente.direccion}')
+        y -= 20
+        c.drawString(100, y, '--------------------------------------')
+    c.save()
+
+    # Convertir el contenido del PDF a base64
+    pdf = buffer.getvalue()
+    base64_pdf = base64.b64encode(pdf).decode('utf-8')
+
+    # Crear la respuesta JSON con el contenido base64
+    response = create_response('success', 'Reporte de clientes', base64_pdf)
+    return Response(response, status=200)
