@@ -14,52 +14,76 @@ from reportlab.pdfgen import canvas
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# #@permission_classes([IsAuthenticated])
 def cliente_list(request):
     clientes = Cliente.objects.all()
     serializer = ClienteSerializer(clientes, many=True)
 
-    response = create_response('success', 'Clientes listados', serializer.data)
+    response = create_response('success', 200, "Clientes obtenidos", serializer.data)
+    return Response(response, status=200)
+
+@api_view(['GET'])
+# #@permission_classes([IsAuthenticated])
+def cliente_detail(request, pk):
+    try:
+        cliente = Cliente.objects.get(id=pk)
+    except Cliente.DoesNotExist:
+        response = create_response('error', 404, "Cliente no encontrado", None)
+        return Response(response, status=404)
+    
+    serializer = ClienteSerializer(cliente, many=False)
+
+    response = create_response('success', 200, "Cliente obtenido", serializer.data)
     return Response(response, status=200)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# #@permission_classes([IsAuthenticated])
 def cliente_create(request):
     serializer = ClienteSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
 
-        response = create_response('success', 'Cliente creado', serializer.data)
+        response = create_response('created', 201, 'Cliente creado', serializer.data)
         return Response(response, status=201)
     
-    response = create_response('error', 'Error al crear cliente', serializer.errors)
+    response = create_response('error', 400, 'Error al crear cliente', serializer.errors)
     return Response(response, status=400)
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+# #@permission_classes([IsAuthenticated])
 def cliente_update(request, pk):
-    cliente = Cliente.objects.get(id=pk)
+    try:
+        cliente = Cliente.objects.get(id=pk)
+    except Cliente.DoesNotExist:
+        response = create_response('error', 404, 'Cliente no encontrado', None)
+        return Response(response, status=404)
+    
     serializer = ClienteSerializer(instance=cliente, data=request.data)
     if serializer.is_valid():
         serializer.save()
 
-        response = create_response('success', 'Cliente actualizado', serializer.data)
+        response = create_response('success', 200, 'Cliente actualizado', serializer.data)
         return Response(response, status=200)
     
-    response = create_response('error', 'Error al actualizar cliente', serializer.errors)
+    response = create_response('error', 400, 'Error al actualizar cliente', serializer.errors)
     return Response(response, status=400)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+# #@permission_classes([IsAuthenticated])
 def cliente_delete(request, pk):
-    cliente = Cliente.objects.get(id=pk)
-    cliente.delete()
+    try:
+        cliente = Cliente.objects.get(id=pk)
+        if cliente:
+            cliente.delete()
+    except Cliente.DoesNotExist:
+        response = create_response('error', 404, 'Cliente no encontrado', None)
+        return Response(response, status=404)
 
-    response = create_response('success', 'Cliente eliminado', None)
+    response = create_response('success', 200, 'Cliente eliminado', None)
     return Response(response, status=200)   
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# #@permission_classes([IsAuthenticated])
 def generar_reporte(request):
     clientes = Cliente.objects.all()
 
@@ -86,5 +110,5 @@ def generar_reporte(request):
     base64_pdf = base64.b64encode(pdf).decode('utf-8')
 
     # Crear la respuesta JSON con el contenido base64
-    response = create_response('success', 'Reporte de clientes', base64_pdf)
+    response = create_response('success', 200, 'Reporte generado', base64_pdf)
     return Response(response, status=200)

@@ -3,6 +3,7 @@ from .views import proveedor_create, proveedor_list, proveedor_detail, proveedor
 
 urlpatterns = [
     path('proveedores/listar/', proveedor_list, name='proveedor_list'),
+    path('proveedores/detalle/<str:pk>/', proveedor_detail, name='proveedor_detail'),
     path('proveedores/crear/', proveedor_create, name='proveedor_create'),
     path('proveedores/actualizar/<str:pk>/', proveedor_update, name='proveedor_update'),
     path('proveedores/eliminar/<str:pk>/', proveedor_delete, name='proveedor_delete'),

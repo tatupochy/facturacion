@@ -19,7 +19,7 @@ from reportlab.pdfgen import canvas
 # Create your views here.
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def factura_create(request):
     serializer = FacturaSerializer(data=request.data)
     if serializer.is_valid():
@@ -37,6 +37,9 @@ def factura_create(request):
             if ultimo_numero is None:
                 ultimo_numero = UltimoNumeroFactura.objects.create(ultimo_numero=0)
             numero = ultimo_numero.ultimo_numero + 1
+            ultimo_numero.ultimo_numero = numero
+
+            print(ultimo_numero.ultimo_numero)
 
             establecimiento = request.data.get('establecimiento')
             punto_expedicion = request.data.get('punto_expedicion')
@@ -121,17 +124,13 @@ def factura_create(request):
             factura.sub_total_iva_10 = sub_total_iva_10
             factura.save()
 
-            # Actualizar el último número de factura
-            ultimo_numero.ultimo_numero = numero
-            ultimo_numero.save()
-
             response = create_response('success', 201, "Factura creada correctamente.", serializer.data)
             return Response(response, status=201)
     
     return Response(serializer.errors)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def factura_list(request):
     facturas = Factura.objects.all()
     serializer = FacturaSerializer(facturas, many=True)
@@ -139,9 +138,23 @@ def factura_list(request):
     response = create_response('success', 200, "Lista de facturas obtenida correctamente.", serializer.data)
     return Response(response)
 
+@api_view(['GET'])
+#@permission_classes([IsAuthenticated])
+def factura_detail(request, pk):
+    try:
+        factura = Factura.objects.get(pk=pk)
+    except Factura.DoesNotExist:
+        response = create_response('error', 404, f"Factura con ID {pk} no encontrada.")
+        return Response(response, status=404)
+
+    serializer = FacturaSerializer(factura)
+
+    response = create_response('success', 200, "Factura obtenida correctamente.", serializer.data)
+    return Response(response)
+
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def factura_update(request):
+#@permission_classes([IsAuthenticated])
+def factura_update(request, pk):
     serializer = FacturaSerializer(data=request.data)
     if serializer.is_valid():
         with transaction.atomic():
@@ -190,10 +203,10 @@ def factura_update(request):
                     factura.sub_total_iva_10 += total
 
                 # Crear o actualizar el ítem de la factura
-                item_id = item_data.get('id')  # Obtener el ID del ítem si está presente
+                item_id = item_data.get('producto')  # Obtener el ID del ítem si está presente
                 if item_id:
                     try:
-                        item = ItemFactura.objects.get(pk=item_id)
+                        item = ItemFactura.objects.get(producto=producto, factura=factura)
                         item.producto = producto
                         item.cantidad = cantidad
                         item.precio_unitario = precio_unitario
@@ -221,6 +234,10 @@ def factura_update(request):
             factura.total = factura.sub_total + factura.total_iva
             factura.save()
 
+            # obtener la factura actualizada
+            factura = Factura.objects.get(pk=factura_id)
+            serializer = FacturaSerializer(factura)
+
             response = create_response('success', 200, "Factura actualizada correctamente.", serializer.data)
             return Response(response, status=200)
     
@@ -228,21 +245,22 @@ def factura_update(request):
     return Response(response, status=400)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def factura_delete(request, factura_id):
+#@permission_classes([IsAuthenticated])
+def factura_delete(request, pk):
     try:
-        factura = Factura.objects.get(pk=factura_id)
+        factura = Factura.objects.get(pk=pk)
     except Factura.DoesNotExist:
-        response = create_response('error', 404, f"Factura con ID {factura_id} no encontrada.")
+        response = create_response('error', 404, f"Factura con ID {pk} no encontrada.")
         return Response(response, status=404)
 
     # Eliminar los ítems de la factura
-    factura.items.all().delete()
+    items = ItemFactura.objects.filter(factura=factura)
+    items.delete()
 
     # Eliminar la factura
     factura.delete()
 
-    response = create_response('success', 204, f"Factura con ID {factura_id} eliminada correctamente.")
+    response = create_response('success', 204, f"Factura con ID {pk} eliminada correctamente.")
     return Response(response, status=204)
 
 @api_view(['GET'])

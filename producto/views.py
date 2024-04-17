@@ -14,62 +14,72 @@ from reportlab.pdfgen import canvas
 # Create your views here.
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def producto_create(request):
     serializer = ProductoSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
 
-        response = create_response('success', 'Producto creado', serializer.data)
+        response = create_response('success', 201, 'Producto creado', serializer.data)
         return Response(response, status=201)
     
-    response = create_response('error', 'Error al crear producto', serializer.errors)
+    response = create_response('error', 400, 'Error al crear el producto', serializer.errors)
     return Response(response, status=400)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def producto_list(request):
     productos = Producto.objects.all()
     serializer = ProductoSerializer(productos, many=True)
 
-    response = create_response('success', 'Productos listados', serializer.data)
+    response = create_response('success', 200, 'Lista de productos', serializer.data)
     return Response(response, status=200)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def producto_detail(request, pk):
-    producto = Producto.objects.get(id=pk)
+    try:
+        producto = Producto.objects.get(id=pk)
+    except Producto.DoesNotExist:
+        response = create_response('error', 404, 'Producto no encontrado')
+        return Response(response, status=404)
     serializer = ProductoSerializer(producto, many=False)
 
-    response = create_response('success', 'Producto listado', serializer.data)
+    response = create_response('success', 200, 'Producto encontrado', serializer.data)
     return Response(response, status=200)
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def producto_update(request, pk):
-    producto = Producto.objects.get(id=pk)
+    try:
+        producto = Producto.objects.get(id=pk)
+    except Producto.DoesNotExist:
+        response = create_response('error', 404, 'Producto no encontrado')
+        return Response(response, status=404)
+    
     serializer = ProductoSerializer(instance=producto, data=request.data)
     if serializer.is_valid():
         serializer.save()
 
-    response = create_response('success', 'Producto actualizado', serializer.data)
+    response = create_response('success', 200, 'Producto actualizado', serializer.data)
     return Response(response, status=200)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def producto_delete(request, pk):
-    producto = Producto.objects.get(id=pk)
-    if producto:
-        producto.delete()
+    try:
+        producto = Producto.objects.get(id=pk)
+    except Producto.DoesNotExist:
+        response = create_response('error', 404, 'Producto no encontrado')
+        return Response(response, status=404)
 
-        response = create_response('success', 'Producto eliminado', None)
-        return Response(response, status=200)
-    
-    response = create_response('error', 'Producto no encontrado', None)
-    return Response(response, status=404)
+    producto.delete()
+
+    response = create_response('success', 200, 'Producto eliminado', None)
+    return Response(response, status=200)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def generar_reporte(request):
     productos = Producto.objects.all()
     response = BytesIO()
@@ -87,6 +97,6 @@ def generar_reporte(request):
     pdf_base64 = base64.b64encode(response.getvalue()).decode('utf-8')
     response.close()
 
-    response = create_response('success', 'Reporte generado', pdf_base64)
+    response = create_response('success', 200, 'Reporte generado', pdf_base64)
     return Response(response, status=200)
 
