@@ -1,0 +1,783 @@
+{
+	"info": {
+		"_postman_id": "71747e30-9006-46d9-aad2-4616ea5305bb",
+		"name": "facturacion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28891449",
+		"_collection_link": "https://jogapo-app.postman.co/workspace/programacion_Web~c16fb75b-6757-408b-ba41-b97d923c86df/collection/28891449-71747e30-9006-46d9-aad2-4616ea5305bb?action=share&source=collecti{
+	"info": {
+		"_postman_id": "71747e30-9006-46d9-aad2-4616ea5305bb",
+		"name": "facturacion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28891449",
+		"_collection_link": "https://jogapo-app.postman.co/workspace/programacion_Web~c16fb75b-6757-408b-ba41-b97d923c86df/collection/28891449-71747e30-9006-46d9-aad2-4616ea5305bb?action=share&source=collection_link&creator=28891449"
+	},
+	"item": [
+		{
+			"name": "cliente",
+			"item": [
+				{
+					"name": "cliente_create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Carlos Arrua\",\r\n    \"direccion\": \"Chile 310\",\r\n    \"telefono\": \"098156253\",\r\n    \"email\": \"carlos_arrua@hotmail.com\",\r\n    \"ruc\": \"486123-8\",\r\n    \"pais\": \"Paraguay\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/clientes/crear/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								"crear",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cliente_delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/clientes/eliminar/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								"eliminar",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cliente_update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Carlos Arrua\",\r\n    \"direccion\": \"Chile 310\",\r\n    \"telefono\": \"098156253\",\r\n    \"email\": \"carlos_arrua@hotmail.com\",\r\n    \"ruc\": \"486123-8\",\r\n    \"pais\": \"Paraguay\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/clientes/actualizar/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								"actualizar",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cliente_list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/clientes/listar/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								"listar",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cliente_detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/clientes/detalle/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								"detalle",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "producto",
+			"item": [
+				{
+					"name": "producto_create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Prueba\",\r\n    \"descripcion\": \"Producto prueba\",\r\n    \"precio\": \"10000.00\",\r\n    \"iva\": \"10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/productos/crear/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"crear",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "producto_delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/productos/eliminar/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"eliminar",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "producto_update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Prueba\",\r\n    \"descripcion\": \"Producto prueba\",\r\n    \"precio\": \"10000.00\",\r\n    \"iva\": \"10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/productos/actualizar/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"actualizar",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "producto_list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/productos/listar/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"listar",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "producto_detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/productos/detalle/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"detalle",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "factura",
+			"item": [
+				{
+					"name": "factura_create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cliente\": 1,\r\n    \"fecha_emision\": \"2024-04-29\",\r\n    \"fecha_vencimiento\": \"2024-08-29\",\r\n    \"timbrado\": \"4654654\",\r\n    \"establecimiento\": \"001\",\r\n    \"punto_expedicion\": \"001\",\r\n    \"condicion_venta\": \"contado\",\r\n    \"items\": [\r\n        {\r\n            \"producto\": 1,\r\n            \"cantidad\": 4\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/facturas/crear/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"facturas",
+								"crear",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "factura_delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/facturas/eliminar/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"facturas",
+								"eliminar",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "factura_update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"cliente\": 1,\r\n    \"fecha_emision\": \"2024-04-29\",\r\n    \"fecha_vencimiento\": \"2024-08-29\",\r\n    \"timbrado\": \"4654654\",\r\n    \"establecimiento\": \"001\",\r\n    \"punto_expedicion\": \"001\",\r\n    \"condicion_venta\": \"contado\",\r\n    \"items\": [\r\n        {\r\n            \"producto\": 1,\r\n            \"cantidad\": 4\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/facturas/actualizar/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"facturas",
+								"actualizar",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "factura_list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/facturas/listar/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"facturas",
+								"listar",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "factura_detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/facturas/detalle/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"facturas",
+								"detalle",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "proveedor",
+			"item": [
+				{
+					"name": "proveedor_create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Lucas Pratto\",\r\n    \"direccion\": \"Samudio 20\",\r\n    \"telefono\": \"0981562489\",\r\n    \"email\": \"lucas_pratto@hotmail.com\",\r\n    \"ruc\": \"16541-8\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proveedores/crear/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proveedores",
+								"crear",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "proveedor_delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proveedores/eliminar/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proveedores",
+								"eliminar",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "proveedor_update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Autorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Lucas Pratto\",\r\n    \"direccion\": \"Samudio 20\",\r\n    \"telefono\": \"0981562489\",\r\n    \"email\": \"lucas_pratto@hotmail.com\",\r\n    \"ruc\": \"16541-8\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proveedores/actualizar/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proveedores",
+								"actualizar",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "proveeedor_list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/proveedores/listar/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proveedores",
+								"listar",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "proveedor_detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/proveedores/detalle/1/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proveedores",
+								"detalle",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "seguridad",
+			"item": [
+				{
+					"name": "token_obtain_pair",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/seguridad/login/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"seguridad",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "reportes",
+			"item": [
+				{
+					"name": "reporte",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorizathion",
+								"value": "Bearer {{token_access}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/{{objeto}}/reporte",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"{{objeto}}",
+								"reporte"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "token_access",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcxNDQ5MDExMiwiaWF0IjoxNzE0NDAzNzEyLCJqdGkiOiIwZDY5ZmFiYTIwN2M0YmIyYjU2ZGVlNGEzZWM2MDc2NSIsInVzZXJfaWQiOjF9.Exb8_7u1txaKFTNVUIdZUnXOP9eH3cwODaj7wMTC-JI",
+			"type": "string"
+		},
+		{
+			"key": "token_refresh",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcxNDQ4OTI1OSwiaWF0IjoxNzE0NDAyODU5LCJqdGkiOiIwZmVjMjA2NTZjZmU0NDU2YmQ2NTdiOTFhZmRlODM5NSIsInVzZXJfaWQiOjF9.WANWM4KYx3r3jYn_Yeutb8GZjenfn1gmJtgTRte0NIQ",
+			"type": "string"
+		},
+		{
+			"key": "objeto",
+			"value": "facturas"
+		}
+	]
+}
