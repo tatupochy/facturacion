@@ -19,7 +19,7 @@ from reportlab.pdfgen import canvas
 # Create your views here.
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def factura_create(request):
     serializer = FacturaSerializer(data=request.data)
     if serializer.is_valid():
@@ -129,8 +129,9 @@ def factura_create(request):
     
     return Response(serializer.errors)
 
+
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def factura_list(request):
     facturas = Factura.objects.all()
     serializer = FacturaSerializer(facturas, many=True)
@@ -138,8 +139,9 @@ def factura_list(request):
     response = create_response('success', 200, "Lista de facturas obtenida correctamente.", serializer.data)
     return Response(response)
 
+
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def factura_detail(request, pk):
     try:
         factura = Factura.objects.get(pk=pk)
@@ -152,8 +154,9 @@ def factura_detail(request, pk):
     response = create_response('success', 200, "Factura obtenida correctamente.", serializer.data)
     return Response(response)
 
+
 @api_view(['PUT'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def factura_update(request, pk):
     serializer = FacturaSerializer(data=request.data)
     if serializer.is_valid():
@@ -244,8 +247,9 @@ def factura_update(request, pk):
     response = create_response('error', 400, "Error al actualizar la factura.", serializer.errors)
     return Response(response, status=400)
 
+
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def factura_delete(request, pk):
     try:
         factura = Factura.objects.get(pk=pk)
@@ -262,6 +266,7 @@ def factura_delete(request, pk):
 
     response = create_response('success', 204, f"Factura con ID {pk} eliminada correctamente.")
     return Response(response, status=204)
+
 
 @api_view(['GET'])
 def generar_reporte(request):

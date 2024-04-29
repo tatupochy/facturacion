@@ -14,7 +14,7 @@ from reportlab.pdfgen import canvas
 # Create your views here.
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def producto_create(request):
     serializer = ProductoSerializer(data=request.data)
     if serializer.is_valid():
@@ -26,8 +26,9 @@ def producto_create(request):
     response = create_response('error', 400, 'Error al crear el producto', serializer.errors)
     return Response(response, status=400)
 
+
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def producto_list(request):
     productos = Producto.objects.all()
     serializer = ProductoSerializer(productos, many=True)
@@ -35,8 +36,9 @@ def producto_list(request):
     response = create_response('success', 200, 'Lista de productos', serializer.data)
     return Response(response, status=200)
 
+
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def producto_detail(request, pk):
     try:
         producto = Producto.objects.get(id=pk)
@@ -48,8 +50,9 @@ def producto_detail(request, pk):
     response = create_response('success', 200, 'Producto encontrado', serializer.data)
     return Response(response, status=200)
 
+
 @api_view(['PUT'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def producto_update(request, pk):
     try:
         producto = Producto.objects.get(id=pk)
@@ -64,8 +67,9 @@ def producto_update(request, pk):
     response = create_response('success', 200, 'Producto actualizado', serializer.data)
     return Response(response, status=200)
 
+
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def producto_delete(request, pk):
     try:
         producto = Producto.objects.get(id=pk)
@@ -78,8 +82,9 @@ def producto_delete(request, pk):
     response = create_response('success', 200, 'Producto eliminado', None)
     return Response(response, status=200)
 
+
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def generar_reporte(request):
     productos = Producto.objects.all()
     response = BytesIO()

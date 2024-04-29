@@ -14,7 +14,7 @@ from reportlab.pdfgen import canvas
 
 
 @api_view(['GET'])
-# #@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def cliente_list(request):
     clientes = Cliente.objects.all()
     serializer = ClienteSerializer(clientes, many=True)
@@ -22,8 +22,9 @@ def cliente_list(request):
     response = create_response('success', 200, "Clientes obtenidos", serializer.data)
     return Response(response, status=200)
 
+
 @api_view(['GET'])
-# #@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def cliente_detail(request, pk):
     try:
         cliente = Cliente.objects.get(id=pk)
@@ -36,8 +37,9 @@ def cliente_detail(request, pk):
     response = create_response('success', 200, "Cliente obtenido", serializer.data)
     return Response(response, status=200)
 
+
 @api_view(['POST'])
-# #@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def cliente_create(request):
     serializer = ClienteSerializer(data=request.data)
     if serializer.is_valid():
@@ -49,8 +51,9 @@ def cliente_create(request):
     response = create_response('error', 400, 'Error al crear cliente', serializer.errors)
     return Response(response, status=400)
 
+
 @api_view(['PUT'])
-# #@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def cliente_update(request, pk):
     try:
         cliente = Cliente.objects.get(id=pk)
@@ -68,8 +71,9 @@ def cliente_update(request, pk):
     response = create_response('error', 400, 'Error al actualizar cliente', serializer.errors)
     return Response(response, status=400)
 
+
 @api_view(['DELETE'])
-# #@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def cliente_delete(request, pk):
     try:
         cliente = Cliente.objects.get(id=pk)
@@ -82,8 +86,9 @@ def cliente_delete(request, pk):
     response = create_response('success', 200, 'Cliente eliminado', None)
     return Response(response, status=200)   
 
+
 @api_view(['GET'])
-# #@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def generar_reporte(request):
     clientes = Cliente.objects.all()
 
