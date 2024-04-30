@@ -8,6 +8,7 @@ class Producto(models.Model):
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     iva = models.CharField(max_length=10, choices=[('0', '0%'), ('5', '5%'), ('10', '10%')], default='10')
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nombre

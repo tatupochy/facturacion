@@ -82,7 +82,7 @@ def proveedor_delete(request, pk):
         response = create_response('error', 404, 'Proveedor no encontrado')
         return Response(response, status=status.HTTP_404_NOT_FOUND)
     
-    proveedor.delete()
+    proveedor.activo = False
 
     response = create_response('success', 200, 'Proveedor eliminado')
     return Response(response, status=200)

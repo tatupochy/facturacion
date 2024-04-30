@@ -77,7 +77,7 @@ def producto_delete(request, pk):
         response = create_response('error', 404, 'Producto no encontrado')
         return Response(response, status=404)
 
-    producto.delete()
+    producto.activo = False
 
     response = create_response('success', 200, 'Producto eliminado', None)
     return Response(response, status=200)

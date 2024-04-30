@@ -78,7 +78,7 @@ def cliente_delete(request, pk):
     try:
         cliente = Cliente.objects.get(id=pk)
         if cliente:
-            cliente.delete()
+            cliente.activo = False
     except Cliente.DoesNotExist:
         response = create_response('error', 404, 'Cliente no encontrado', None)
         return Response(response, status=404)

@@ -9,7 +9,7 @@ class Factura(models.Model):
     numero = models.CharField(max_length=100, editable=False, unique=True)
     numeracion = models.CharField(max_length=100, editable=False, unique=True, null=True)
     fecha_emision = models.DateField(editable=False)
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     establecimiento = models.CharField(max_length=100, editable=False)
@@ -30,7 +30,7 @@ class Factura(models.Model):
 
 class ItemFactura(models.Model):
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
     cantidad = models.PositiveIntegerField()
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     iva_exenta = models.DecimalField(max_digits=10, decimal_places=2)
