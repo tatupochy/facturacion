@@ -16,14 +16,14 @@
 						"method": "POST",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\": \"Carlos Arrua\",\r\n    \"direccion\": \"Chile 310\",\r\n    \"telefono\": \"098156253\",\r\n    \"email\": \"carlos_arrua@hotmail.com\",\r\n    \"ruc\": \"486123-8\",\r\n    \"pais\": \"Paraguay\"\r\n}",
+							"raw": "{\r\n    \"nombre\": \"Rodrigo Teixeira\",\r\n    \"direccion\": \"Alberdi 310\",\r\n    \"telefono\": \"0981456352\",\r\n    \"email\": \"rodrigo_teixeira@hotmail.com\",\r\n    \"ruc\": \"4456213-9\",\r\n    \"pais\": \"Paraguay\",\r\n    \"activo\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -51,7 +51,7 @@
 						"method": "DELETE",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -87,14 +87,14 @@
 						"method": "PUT",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Carlos Arrua\",\r\n    \"direccion\": \"Chile 310\",\r\n    \"telefono\": \"098156253\",\r\n    \"email\": \"carlos_arrua@hotmail.com\",\r\n    \"ruc\": \"486123-8\",\r\n    \"pais\": \"Paraguay\"\r\n}",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Carlos Arruaa\",\r\n    \"direccion\": \"Chile 3100\",\r\n    \"telefono\": \"098156253\",\r\n    \"email\": \"carlos_arrua@hotmail.com\",\r\n    \"ruc\": \"486123-8\",\r\n    \"pais\": \"Paraguay\",\r\n    \"activo\": \"true\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -123,7 +123,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -138,6 +138,13 @@
 								"clientes",
 								"listar",
 								""
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -149,13 +156,13 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{url}}/api/clientes/detalle/1/",
+							"raw": "{{url}}/api/clientes/detalle/2/",
 							"host": [
 								"{{url}}"
 							],
@@ -163,7 +170,7 @@
 								"api",
 								"clientes",
 								"detalle",
-								"1",
+								"2",
 								""
 							]
 						}
@@ -181,14 +188,14 @@
 						"method": "POST",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\": \"Prueba\",\r\n    \"descripcion\": \"Producto prueba\",\r\n    \"precio\": \"10000.00\",\r\n    \"iva\": \"10\"\r\n}",
+							"raw": "{\r\n    \"nombre\": \"Prueba\",\r\n    \"descripcion\": \"Producto prueba\",\r\n    \"precio\": \"10000.00\",\r\n    \"iva\": \"10\",\r\n    \"activo\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -216,7 +223,7 @@
 						"method": "DELETE",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -252,14 +259,14 @@
 						"method": "PUT",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Prueba\",\r\n    \"descripcion\": \"Producto prueba\",\r\n    \"precio\": \"10000.00\",\r\n    \"iva\": \"10\"\r\n}",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Prueba\",\r\n    \"descripcion\": \"Producto prueba\",\r\n    \"precio\": \"10000.00\",\r\n    \"iva\": \"10\",\r\n    \"activo\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -288,7 +295,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -314,7 +321,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -346,7 +353,7 @@
 						"method": "POST",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -453,7 +460,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -479,7 +486,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -511,14 +518,14 @@
 						"method": "POST",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\": \"Lucas Pratto\",\r\n    \"direccion\": \"Samudio 20\",\r\n    \"telefono\": \"0981562489\",\r\n    \"email\": \"lucas_pratto@hotmail.com\",\r\n    \"ruc\": \"16541-8\"\r\n}",
+							"raw": "{\r\n    \"nombre\": \"Lucas Pratto\",\r\n    \"direccion\": \"Samudio 20\",\r\n    \"telefono\": \"0981562489\",\r\n    \"email\": \"lucas_pratto@hotmail.com\",\r\n    \"ruc\": \"16541-8\",\r\n    \"activo\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -546,7 +553,7 @@
 						"method": "DELETE",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -582,14 +589,14 @@
 						"method": "PUT",
 						"header": [
 							{
-								"key": "Autorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Lucas Pratto\",\r\n    \"direccion\": \"Samudio 20\",\r\n    \"telefono\": \"0981562489\",\r\n    \"email\": \"lucas_pratto@hotmail.com\",\r\n    \"ruc\": \"16541-8\"\r\n}",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Lucas Pratto\",\r\n    \"direccion\": \"Samudio 20\",\r\n    \"telefono\": \"0981562489\",\r\n    \"email\": \"lucas_pratto@hotmail.com\",\r\n    \"ruc\": \"16541-8\",\r\n    \"activo\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -618,7 +625,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -644,7 +651,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -710,7 +717,7 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "Authorizathion",
+								"key": "Authorization",
 								"value": "Bearer {{token_access}}",
 								"type": "text"
 							}
@@ -761,7 +768,7 @@
 		},
 		{
 			"key": "token_access",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcxNDQ5MDExMiwiaWF0IjoxNzE0NDAzNzEyLCJqdGkiOiIwZDY5ZmFiYTIwN2M0YmIyYjU2ZGVlNGEzZWM2MDc2NSIsInVzZXJfaWQiOjF9.Exb8_7u1txaKFTNVUIdZUnXOP9eH3cwODaj7wMTC-JI",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NTA1OTUzLCJpYXQiOjE3MTQ1MDU2NTMsImp0aSI6IjM3OWUxOTVjZWVkMTRkMThiZmY5M2FhZGY5OTZmNGRjIiwidXNlcl9pZCI6MX0.bdcE0ZSme-CfaWLqdqPbvndFm1D1uHMfN3DK63AoJRE",
 			"type": "string"
 		},
 		{
@@ -771,7 +778,7 @@
 		},
 		{
 			"key": "objeto",
-			"value": "facturas"
+			"value": "clientes"
 		}
 	]
 }
