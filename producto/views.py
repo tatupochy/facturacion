@@ -14,7 +14,7 @@ from reportlab.pdfgen import canvas
 # Create your views here.
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def producto_create(request):
     serializer = ProductoSerializer(data=request.data)
     if serializer.is_valid():
@@ -28,7 +28,7 @@ def producto_create(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def producto_list(request):
     productos = Producto.objects.all()
     serializer = ProductoSerializer(productos, many=True)
@@ -38,7 +38,7 @@ def producto_list(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def producto_detail(request, pk):
     try:
         producto = Producto.objects.get(id=pk)
@@ -52,7 +52,7 @@ def producto_detail(request, pk):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def producto_update(request, pk):
     try:
         producto = Producto.objects.get(id=pk)
@@ -69,7 +69,7 @@ def producto_update(request, pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def producto_delete(request, pk):
     try:
         producto = Producto.objects.get(id=pk)
@@ -84,7 +84,7 @@ def producto_delete(request, pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def generar_reporte(request):
     productos = Producto.objects.all()
     response = BytesIO()

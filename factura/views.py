@@ -19,7 +19,7 @@ from reportlab.pdfgen import canvas
 # Create your views here.
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def factura_create(request):
     serializer = FacturaSerializer(data=request.data)
     if serializer.is_valid():
@@ -131,7 +131,7 @@ def factura_create(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def factura_list(request):
     facturas = Factura.objects.all()
     serializer = FacturaSerializer(facturas, many=True)
@@ -141,7 +141,7 @@ def factura_list(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def factura_detail(request, pk):
     try:
         factura = Factura.objects.get(pk=pk)
@@ -156,7 +156,7 @@ def factura_detail(request, pk):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def factura_update(request, pk):
     serializer = FacturaSerializer(data=request.data)
     if serializer.is_valid():
@@ -249,7 +249,7 @@ def factura_update(request, pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def factura_delete(request, pk):
     try:
         factura = Factura.objects.get(pk=pk)

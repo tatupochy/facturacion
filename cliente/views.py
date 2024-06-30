@@ -14,7 +14,7 @@ from reportlab.pdfgen import canvas
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def cliente_list(request):
     clientes = Cliente.objects.all()
     serializer = ClienteSerializer(clientes, many=True)
@@ -24,7 +24,7 @@ def cliente_list(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def cliente_detail(request, pk):
     try:
         cliente = Cliente.objects.get(id=pk)
@@ -39,7 +39,7 @@ def cliente_detail(request, pk):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def cliente_create(request):
     serializer = ClienteSerializer(data=request.data)
     if serializer.is_valid():
@@ -53,7 +53,7 @@ def cliente_create(request):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def cliente_update(request, pk):
     try:
         cliente = Cliente.objects.get(id=pk)
@@ -73,7 +73,7 @@ def cliente_update(request, pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def cliente_delete(request, pk):
     try:
         cliente = Cliente.objects.get(id=pk)
@@ -88,7 +88,7 @@ def cliente_delete(request, pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def generar_reporte(request):
     clientes = Cliente.objects.all()
 
