@@ -148,11 +148,13 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=120),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=1200),
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=14),
     'JWT_ALLOW_REFRESH': True,
 }
 
+# allow all origins
 CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:4200',
+    "http://localhost:4200",
+    "http://127.0.0.1:4200"
 ]
