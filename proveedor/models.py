@@ -10,6 +10,7 @@ class Proveedor(models.Model):
     email = models.EmailField()
     ruc = models.CharField(max_length=50)
     activo = models.BooleanField(default=True)
+    pais = models.CharField(max_length=100)
 
     def __str__(self):
         return self.nombre

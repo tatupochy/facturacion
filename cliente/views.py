@@ -45,8 +45,8 @@ def cliente_create(request):
     if serializer.is_valid():
         serializer.save()
 
-        response = create_response('created', 201, 'Cliente creado', serializer.data)
-        return Response(response, status=201)
+        response = create_response('success', 200, 'Cliente creado', serializer.data)
+        return Response(response, status=200)
     
     response = create_response('error', 400, 'Error al crear cliente', serializer.errors)
     return Response(response, status=400)
