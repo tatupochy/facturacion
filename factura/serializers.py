@@ -1,12 +1,18 @@
 from rest_framework import serializers
 from datetime import datetime
+
+from producto.serializers import ProductoSerializer
 from .models import Factura, ItemFactura
 
 
 class ItemFacturaSerializer(serializers.ModelSerializer):
+
+    producto = ProductoSerializer()
+    
     class Meta:
         model = ItemFactura
         fields = '__all__'
+        
 
 class FacturaSerializer(serializers.ModelSerializer):
     items = ItemFacturaSerializer(source='itemfactura_set', many=True, read_only=True)  # Campo para incluir los items de la factura
