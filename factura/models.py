@@ -14,7 +14,7 @@ class Factura(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2)
     establecimiento = models.CharField(max_length=100, editable=False)
     punto_expedicion = models.CharField(max_length=100, editable=False)
-    fecha_vencimiento = models.DateField()
+    fecha_vencimiento = models.DateField(blank=True, null=True)
     timbrado = models.CharField(max_length=100)
     condicion_venta = models.CharField(choices=(
                                                     ('contado', 'Contado'),

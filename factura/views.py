@@ -25,7 +25,8 @@ def factura_create(request):
     if serializer.is_valid():
         with transaction.atomic():
 
-            cliente_id = request.data.get('cliente')
+            cliente_data = request.data.get('cliente')
+            cliente_id = cliente_data.get('id')
             try:
                 cliente = Cliente.objects.get(pk=cliente_id)
             except Cliente.DoesNotExist:
@@ -78,7 +79,8 @@ def factura_create(request):
             # Procesar los ítems de la factura
             items_data = request.data.get('items', [])  # Obtener los datos de los ítems de la solicitud
             for item_data in items_data:
-                producto_id = item_data.get('producto')
+                producto_data = item_data.get('producto')
+                producto_id = producto_data.get('id')
                 cantidad = item_data.get('cantidad')
                 
                 try:
@@ -107,8 +109,8 @@ def factura_create(request):
                     cantidad=cantidad,
                     precio_unitario=precio_unitario,
                     iva_exenta=total if producto.iva == '0' else 0,
-                    iva_5=total,
-                    iva_10=total
+                    iva_5=total_iva_5,
+                    iva_10=total_iva_10
                 )
 
             total_iva = total_iva_5 + total_iva_10
@@ -123,6 +125,8 @@ def factura_create(request):
             factura.sub_total_iva_5 = sub_total_iva_5
             factura.sub_total_iva_10 = sub_total_iva_10
             factura.save()
+
+            ultimo_numero.save()
 
             response = create_response('success', 201, "Factura creada correctamente.", serializer.data)
             return Response(response, status=201)
