@@ -1,5 +1,6 @@
 from django.db import models
 from cliente.models import Cliente
+from proveedor.models import Proveedor
 from producto.models import Producto
 
 # Create your models here.
@@ -9,7 +10,8 @@ class Factura(models.Model):
     numero = models.CharField(max_length=100, editable=False, unique=True)
     numeracion = models.CharField(max_length=100, editable=False, unique=True, null=True)
     fecha_emision = models.DateField(editable=False)
-    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
+    cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT, blank=True, null=True)
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.PROTECT, blank=True, null=True)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     establecimiento = models.CharField(max_length=100, editable=False)
