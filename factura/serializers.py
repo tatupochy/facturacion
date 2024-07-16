@@ -21,6 +21,7 @@ class FacturaSerializer(serializers.ModelSerializer):
         model = Factura
         fields = '__all__'
         extra_kwargs = {
+            'operacion': {'choices': ['venta', 'compra']},
             'condicion_venta': {'choices': ['contado', 'credito']},
             'sub_total': {'required': False},
             'total': {'required': False},

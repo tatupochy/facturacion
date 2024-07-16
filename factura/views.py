@@ -10,6 +10,9 @@ from .serializers import FacturaSerializer
 from .models import Factura, ItemFactura, UltimoNumeroFactura
 from producto.models import Producto
 from cliente.models import Cliente
+from compra.models import Compra
+from proveedor.models import Proveedor
+from venta.models import Venta
 from io import BytesIO
 import base64
 from reportlab.lib.pagesizes import letter
@@ -24,14 +27,25 @@ def factura_create(request):
     serializer = FacturaSerializer(data=request.data)
     if serializer.is_valid():
         with transaction.atomic():
+            
+            operacion = request.data.get('operacion')
 
-            cliente_data = request.data.get('cliente')
-            cliente_id = cliente_data.get('id')
-            try:
-                cliente = Cliente.objects.get(pk=cliente_id)
-            except Cliente.DoesNotExist:
-                response = create_response('error', 400, f"Cliente con ID {cliente_id} no encontrado.")
-                return Response(response, status=400)
+            if operacion == 'venta':
+                cliente_data = request.data.get('cliente')
+                cliente_id = cliente_data.get('id')
+                try:
+                    cliente = Cliente.objects.get(pk=cliente_id)
+                except Cliente.DoesNotExist:
+                    response = create_response('error', 400, f"Cliente con ID {cliente_id} no encontrado.")
+                    return Response(response, status=400)
+            elif operacion == 'compra':
+                proveedor_data = request.data.get('proveedor')
+                proveedor_id = proveedor_data.get('id')
+                try:
+                    proveedor = Proveedor.objects.get(pk=proveedor_id)
+                except Proveedor.DoesNotExist:
+                    response = create_response('error', 400, f"Proveedor con ID {proveedor_id} no encontrado.")
+                    return Response(response, status=400)
 
             # Lógica para generar campos como numero, numeracion, establecimiento, punto_expedicion, etc.
             ultimo_numero = UltimoNumeroFactura.objects.first()
@@ -101,6 +115,28 @@ def factura_create(request):
                 elif producto.iva == '10':
                     total_iva_10 += total * Decimal(0.1)
                     sub_total_iva_10 += total 
+
+                if operacion == 'compra':
+                    Compra.objects.create(
+                        proveedor=proveedor,
+                        cantidad=cantidad,
+                        producto=producto,
+                        factura=factura
+                    )
+
+                    producto.stock += cantidad
+                    producto.save()
+
+                elif operacion == 'venta':
+                    Venta.objects.create(
+                        cliente=cliente,
+                        cantidad=cantidad,
+                        producto=producto,
+                        factura=factura
+                    )
+
+                    producto.stock -= cantidad
+                    producto.save()
 
                 # Crear el ítem de la factura
                 ItemFactura.objects.create(

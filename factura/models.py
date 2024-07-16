@@ -22,6 +22,12 @@ class Factura(models.Model):
                                                     ('contado', 'Contado'),
                                                     ('credito', 'Crédito'),
                                                 ), max_length=100)
+    operacion = models.CharField(
+        choices=(
+            ('compra', 'Compra'),
+            ('venta', 'Venta')
+        ), max_length=100, blank=True, null=True
+    )
     total_iva_5 = models.DecimalField(max_digits=10, decimal_places=2)
     sub_total_iva_5 = models.DecimalField(max_digits=10, decimal_places=2)
     total_iva_10 = models.DecimalField(max_digits=10, decimal_places=2)
