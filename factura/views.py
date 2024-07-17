@@ -30,6 +30,9 @@ def factura_create(request):
             
             operacion = request.data.get('operacion')
 
+            cliente = None
+            proveedor = None
+
             if operacion == 'venta':
                 cliente_data = request.data.get('cliente')
                 cliente_id = cliente_data.get('id')
@@ -80,6 +83,7 @@ def factura_create(request):
                 fecha_emision=fecha_emision,
                 fecha_vencimiento=fecha_vencimiento,
                 cliente=cliente,
+                proveedor=proveedor,
                 total=0,
                 total_iva_5=0,
                 total_iva_10=0,
@@ -194,6 +198,33 @@ def factura_detail(request, pk):
     response = create_response('success', 200, "Factura obtenida correctamente.", serializer.data)
     return Response(response)
 
+@api_view(['POST'])
+def factura_filter(request):
+    operacion = request.data.get('operacion')
+    fecha_emision = request.data.get('fecha_emision')
+
+    print('--------------------')
+    print('FILTRANDO')
+    print(request.data)
+    print(operacion)
+    print(fecha_emision)
+    print('--------------------')
+
+    if fecha_emision is not None:
+        if operacion == 'venta':
+            facturas = Factura.objects.filter(operacion='venta', fecha_emision=fecha_emision)
+        elif operacion == 'compra':
+            facturas = Factura.objects.filter(operacion='compra', fecha_emision=fecha_emision)
+    else:
+        if operacion == 'venta':
+            facturas = Factura.objects.filter(operacion='venta')
+        elif operacion == 'compra':
+            facturas = Factura.objects.filter(operacion='compra')
+
+    serializer = FacturaSerializer(facturas, many=True)
+
+    response = create_response('success', 200, "Lista de facturas filtrada correctamente.", serializer.data)
+    return Response(response)
 
 @api_view(['PUT'])
 # @permission_classes([IsAuthenticated])

@@ -33,3 +33,20 @@ class FacturaSerializer(serializers.ModelSerializer):
             'sub_total_iva': {'required': False},
         }
         depth = 1
+
+
+class FilterSerializer(serializers.Serializer):
+    operacion = serializers.ChoiceField(choices=['venta', 'compra'], required=True)
+    fecha_emision = serializers.DateField(required=False)
+
+    def validate_fecha_emision(self, value):
+        if value:
+            if value > datetime.now().date():
+                raise serializers.ValidationError('La fecha de emisión no puede ser mayor a la fecha actual')
+        return value
+    
+    def validate(self, data):
+        if not data.get('fecha_emision'):
+            raise serializers.ValidationError('Debe ingresar la fecha de emisión')
+        return data
+    
