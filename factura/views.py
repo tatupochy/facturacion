@@ -205,6 +205,7 @@ def factura_filter(request):
 
     print('--------------------')
     print('FILTRANDO')
+    print(request)
     print(request.data)
     print(operacion)
     print(fecha_emision)
@@ -216,6 +217,7 @@ def factura_filter(request):
         elif operacion == 'compra':
             facturas = Factura.objects.filter(operacion='compra', fecha_emision=fecha_emision)
     else:
+        print('No hay fecha de emisión')
         if operacion == 'venta':
             facturas = Factura.objects.filter(operacion='venta')
         elif operacion == 'compra':

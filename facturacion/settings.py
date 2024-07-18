@@ -65,7 +65,7 @@ ROOT_URLCONF = 'facturacion.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'reportes'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

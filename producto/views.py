@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -5,10 +6,11 @@ from rest_framework.response import Response
 from response import create_response
 from .models import Producto
 from .serializers import ProductoSerializer
-from io import BytesIO
+from django.template.loader import get_template
+from django.http import HttpResponse
 import base64
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from io import BytesIO
+from xhtml2pdf import pisa
 
 
 # Create your views here.
@@ -84,24 +86,27 @@ def producto_delete(request, pk):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
 def generar_reporte(request):
     productos = Producto.objects.all()
-    response = BytesIO()
-    pdf = canvas.Canvas(response, pagesize=letter)
-    pdf.drawString(100, 800, 'Reporte de Productos')
-    pdf.drawString(100, 780, 'Lista de productos')
-    pdf.drawString(100, 760, 'ID - Nombre - Precio - Stock')
-    y = 740
-    for producto in productos:
-        pdf.drawString(100, y, f'{producto.id} - {producto.nombre} - {producto.precio}')
-        y -= 20
-    pdf.showPage()
-    pdf.save()
-    response.seek(0)
-    pdf_base64 = base64.b64encode(response.getvalue()).decode('utf-8')
-    response.close()
+    context = {
+        'productos': productos
+    }
+    
+    # Renderizar el template HTML
+    template = get_template('reporte_stock.html')  # Asegúrate de tener un template HTML adecuado
+    html_content = template.render(context)
+    
+    # Convertir HTML a PDF
+    pdf_data = convert_html_to_pdf(html_content)
+    
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_stock.pdf"'
 
-    response = create_response('success', 200, 'Reporte generado', pdf_base64)
-    return Response(response, status=200)
+    return response
 
+def convert_html_to_pdf(html_content):
+    result_file = BytesIO()
+    pisa.CreatePDF(html_content, dest=result_file)
+    pdf_data = result_file.getvalue()
+    result_file.close()
+    return pdf_data
