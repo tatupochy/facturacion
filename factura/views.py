@@ -107,7 +107,11 @@ def factura_create(request):
                     response = create_response('error', 400, f"Producto con ID {producto_id} no encontrado.")
                     return Response(response, status=400)
 
-                precio_unitario = producto.precio
+                if operacion == 'venta':
+                    precio_unitario = producto.precio
+                elif operacion == 'compra':
+                    precio_unitario = producto.costo
+
                 total = precio_unitario * cantidad
                 sub_total += total
 
