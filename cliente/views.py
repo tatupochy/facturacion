@@ -4,11 +4,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from response import create_response
 from .models import Cliente
+from factura.models import Factura
+from django.template.loader import get_template
 from .serializers import ClienteSerializer
 from io import BytesIO
-import base64
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from xhtml2pdf import pisa
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -87,33 +88,52 @@ def cliente_delete(request, pk):
     return Response(response, status=200)   
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 # @permission_classes([IsAuthenticated])
 def generar_reporte(request):
+
+    desde = request.data.get('desde')
+    hasta = request.data.get('hasta')
+
+    # reporte top 15 clientes
+    facturas = Factura.objects.all()
+    facturas = facturas.filter(fecha_emision__range=[desde, hasta])
     clientes = Cliente.objects.all()
 
-    # Generar el PDF utilizando ReportLab
-    buffer = BytesIO()
-    c = canvas.Canvas(buffer, pagesize=letter)
-    c.drawString(100, 750, 'Reporte de clientes')
-    y = 700
+    clientes_facturas = []
     for cliente in clientes:
-        y -= 20
-        c.drawString(100, y, f'Nombre: {cliente.nombre}')
-        y -= 20
-        c.drawString(100, y, f'Email: {cliente.email}')
-        y -= 20
-        c.drawString(100, y, f'Telefono: {cliente.telefono}')
-        y -= 20
-        c.drawString(100, y, f'Direccion: {cliente.direccion}')
-        y -= 20
-        c.drawString(100, y, '--------------------------------------')
-    c.save()
+        facturas_cliente = facturas.filter(cliente=cliente)
+        total_facturas = 0
+        for factura in facturas_cliente:
+            total_facturas += factura.total
+        clientes_facturas.append({
+            'cliente': cliente,
+            'total_facturas': total_facturas
+        })
 
-    # Convertir el contenido del PDF a base64
-    pdf = buffer.getvalue()
-    base64_pdf = base64.b64encode(pdf).decode('utf-8')
+    clientes_facturas = sorted(clientes_facturas, key=lambda x: x['total_facturas'], reverse=True)
+    clientes_facturas = clientes_facturas[:15]
 
-    # Crear la respuesta JSON con el contenido base64
-    response = create_response('success', 200, 'Reporte generado', base64_pdf)
-    return Response(response, status=200)
+    # Crear PDF
+    template = get_template('reporte_top_clientes.html')
+    context = {
+        'desde': desde,
+        'hasta': hasta,
+        'clientes_facturas': clientes_facturas
+    }
+
+    html = template.render(context)
+    pdf = convert_html_to_pdf(html)
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_top_clientes.pdf"'
+
+    return response
+    
+
+def convert_html_to_pdf(html_content):
+    result_file = BytesIO()
+    pisa.CreatePDF(html_content, dest=result_file)
+    pdf_data = result_file.getvalue()
+    result_file.close()
+    return pdf_data

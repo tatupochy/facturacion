@@ -7,9 +7,11 @@ from response import create_response
 from .models import Proveedor
 from .serializers import ProveedorSerializer
 from io import BytesIO
-import base64
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from factura.models import Factura
+
 
 # Create your views here.
 
@@ -88,28 +90,52 @@ def proveedor_delete(request, pk):
     return Response(response, status=200)
     
 
-@api_view(['GET'])
+@api_view(['POST'])
 # @permission_classes([IsAuthenticated])
 def generar_reporte(request):
+
+    desde = request.data.get('desde')
+    hasta = request.data.get('hasta')
+
+    # reporte top 15 proveedores
+    facturas = Factura.objects.all()
+    facturas = facturas.filter(fecha_emision__range=[desde, hasta])
     proveedores = Proveedor.objects.all()
-    
-    buffer = BytesIO()
-    pdf = canvas.Canvas(buffer, pagesize=letter)
-    pdf.drawString(100, 750, 'Reporte de proveedores')
-    y = 700
+
+    proveedores_facturas = []
     for proveedor in proveedores:
-        pdf.drawString(100, y, proveedor.nombre)
-        pdf.drawString(200, y, proveedor.direccion)
-        pdf.drawString(300, y, proveedor.telefono)
-        pdf.drawString(400, y, proveedor.ruc)
-        y -= 20
+        facturas_proveedor = facturas.filter(proveedor=proveedor)
+        total_facturas = 0
+        for factura in facturas_proveedor:
+            total_facturas += factura.total
+        proveedores_facturas.append({
+            'proveedor': proveedor,
+            'total_facturas': total_facturas
+        })
 
-    pdf.showPage()
-    pdf.save()
-    pdf_buffer = buffer.getvalue()
-    buffer.close()
-    pdf_base64 = base64.b64encode(pdf_buffer).decode('utf-8')
+    proveedores_facturas = sorted(proveedores_facturas, key=lambda x: x['total_facturas'], reverse=True)
+    proveedores_facturas = proveedores_facturas[:15]
 
-    response = create_response('success', 200, 'Reporte generado', {'pdf': pdf_base64})
-    return Response(response, status=200)
+    # Crear PDF
+    template = get_template('reporte_top_proveedores.html')
+    context = {
+        'desde': desde,
+        'hasta': hasta,
+        'proveedores_facturas': proveedores_facturas
+    }
 
+    html = template.render(context)
+    pdf = convert_html_to_pdf(html)
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_top_proveedores.pdf"'
+
+    return response
+    
+
+def convert_html_to_pdf(html_content):
+    result_file = BytesIO()
+    pisa.CreatePDF(html_content, dest=result_file)
+    pdf_data = result_file.getvalue()
+    result_file.close()
+    return pdf_data

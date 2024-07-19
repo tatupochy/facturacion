@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de stock</title>
+    <title>Top 15 proveedores</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,22 +33,24 @@
     </style>
 </head>
 <body>
-    <h1>Reporte de stock</h1>
-    
+    <h1>Top 15 proveedores</h1>
+    <span>Fecha desde: {{ desde }}</span>
+    <br>
+    <span>Fecha hasta: {{ hasta }}</span>
     <table>
         <thead>
             <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
+                <th>Nombre</th>
+                <th>Ruc</th>
+                <th>Total vendido</th>
             </tr>
         </thead>
         <tbody>
-            {% for producto in productos %}
+            {% for proveedores_factura in proveedores_facturas %}
             <tr>
-                <td>{{ producto.nombre }}</td>
-                <td>{{ producto.stock }}</td>
-                <td>{{ producto.precio }}</td>
+                <td>{{ proveedores_factura.proveedor.nombre }}</td>
+                <td>{{ proveedores_factura.proveedor.ruc }}</td>
+                <td>{{ proveedores_factura.total_facturas }}</td>
             </tr>
             {% endfor %}
         </tbody>

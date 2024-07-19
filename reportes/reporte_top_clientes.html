@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 15 clientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Top 15 clientes</h1>
+    <span>Fecha desde: {{ desde }}</span>
+    <br>
+    <span>Fecha hasta: {{ hasta }}</span>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Ruc</th>
+                <th>Total comprado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for clientes_factura in clientes_facturas %}
+            <tr>
+                <td>{{ clientes_factura.cliente.nombre }}</td>
+                <td>{{ clientes_factura.cliente.ruc }}</td>
+                <td>{{ clientes_factura.total_facturas }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

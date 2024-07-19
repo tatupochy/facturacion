@@ -11,6 +11,7 @@ from django.http import HttpResponse
 import base64
 from io import BytesIO
 from xhtml2pdf import pisa
+from factura.models import Factura, ItemFactura
 
 
 # Create your views here.
@@ -85,7 +86,7 @@ def producto_delete(request, pk):
     return Response(response, status=200)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def generar_reporte(request):
     productos = Producto.objects.all()
     context = {
@@ -110,3 +111,108 @@ def convert_html_to_pdf(html_content):
     pdf_data = result_file.getvalue()
     result_file.close()
     return pdf_data
+
+
+@api_view(['POST'])
+def generar_reporte_mas_vendidos(request):
+    
+    desde = request.data['desde']
+    hasta = request.data['hasta']
+
+    facturas = Factura.objects.all()
+    facturas = facturas.filter(fecha_emision__range=[desde, hasta])
+
+    productos = Producto.objects.all()
+    productos = list(map(lambda producto: {
+        'id': producto.id,
+        'nombre': producto.nombre,
+        'precio': producto.precio,
+        'cantidad_vendida': 0
+    }, productos))
+
+    for producto in productos:
+        producto['cantidad_vendida'] = 0
+        for factura in facturas:
+            items = ItemFactura.objects.all()
+            items = items.filter(factura=factura)
+            for item in items:
+                if item.producto.id == producto['id']:
+                    producto['cantidad_vendida'] += item.cantidad
+
+    productos = sorted(productos, key=lambda producto: producto['cantidad_vendida'], reverse=True)
+
+    context = {
+        'desde': desde,
+        'hasta': hasta,
+        'productos': productos
+    }
+
+    # Renderizar el template HTML
+    template = get_template('reporte_mas_vendidos.html')
+
+    html_content = template.render(context)
+
+    # Convertir HTML a PDF
+    pdf_data = convert_html_to_pdf(html_content)
+
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_mas_vendidos.pdf"'
+
+    return response
+
+
+@api_view(['POST'])
+def generar_reporte_de_utilidades(request):
+    
+    desde = request.data['desde']
+    hasta = request.data['hasta']
+
+    facturas = Factura.objects.all()
+    facturas = facturas.filter(fecha_emision__range=[desde, hasta])
+
+    productos = Producto.objects.all()
+    productos = list(map(lambda producto: {
+        'id': producto.id,
+        'nombre': producto.nombre,
+        'precio': producto.precio,
+        'costo': producto.costo,
+        'cantidad_vendida': 0,
+        'total_vendido': 0,
+        'total_comprado': 0,
+        'utilidad': 0
+    }, productos))
+
+    for producto in productos:
+        producto['cantidad_vendida'] = 0
+        producto['total_vendido'] = 0
+        producto['total_comprado'] = 0
+        producto['utilidad'] = 0
+        for factura in facturas:
+            items = ItemFactura.objects.all()
+            items = items.filter(factura=factura)
+            for item in items:
+                if item.producto.id == producto['id']:
+                    producto['cantidad_vendida'] += item.cantidad
+                    producto['total_vendido'] += item.cantidad * producto['precio']
+                    producto['total_comprado'] += item.cantidad * producto['costo']
+
+        producto['utilidad'] = producto['total_vendido'] - producto['total_comprado']
+
+    context = {
+        'desde': desde,
+        'hasta': hasta,
+        'productos': productos
+    }
+
+    # Renderizar el template HTML
+    template = get_template('reporte_de_utilidades.html')
+
+    html_content = template.render(context)
+
+    # Convertir HTML a PDF
+    pdf_data = convert_html_to_pdf(html_content)
+
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_de_utilidades.pdf"'
+
+    return response
