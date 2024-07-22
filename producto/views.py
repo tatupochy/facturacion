@@ -89,8 +89,12 @@ def producto_delete(request, pk):
 @api_view(['POST'])
 def generar_reporte(request):
     productos = Producto.objects.all()
+    
+    total_productos = productos.count()
+    
     context = {
-        'productos': productos
+        'productos': productos,
+        'total_productos': total_productos
     }
     
     # Renderizar el template HTML
@@ -141,10 +145,13 @@ def generar_reporte_mas_vendidos(request):
 
     productos = sorted(productos, key=lambda producto: producto['cantidad_vendida'], reverse=True)
 
+    total_vendidos = sum(map(lambda producto: producto['cantidad_vendida'], productos))
+
     context = {
         'desde': desde,
         'hasta': hasta,
-        'productos': productos
+        'productos': productos,
+        'total_vendidos': total_vendidos
     }
 
     # Renderizar el template HTML
@@ -198,10 +205,13 @@ def generar_reporte_de_utilidades(request):
 
         producto['utilidad'] = producto['total_vendido'] - producto['total_comprado']
 
+    total_utilidades = sum(map(lambda producto: producto['utilidad'], productos))
+
     context = {
         'desde': desde,
         'hasta': hasta,
-        'productos': productos
+        'productos': productos,
+        'total_utilidades': total_utilidades
     }
 
     # Renderizar el template HTML

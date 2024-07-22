@@ -49,10 +49,13 @@ def generar_reporte(request):
         'total': venta.cantidad * venta.producto.precio
     }, ventas))
 
+    total = sum(map(lambda venta: venta['total'], ventas))
+
     context = {
         'desde': desde,
         'hasta': hasta,
-        'ventas': ventas
+        'ventas': ventas,
+        'total': total
     }
 
     template = get_template('reporte_ventas.html')

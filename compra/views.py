@@ -39,6 +39,9 @@ def generar_reporte(request):
     for factura in facturas:
         compras.extend(factura.compra_set.all()) 
 
+    total_cantidad = sum(map(lambda compra: compra.cantidad, compras))
+    total_total = sum(map(lambda compra: compra.cantidad * compra.producto.precio, compras))
+
     # set total
     compras = list(map(lambda compra: {
         'id': compra.id,
@@ -52,7 +55,9 @@ def generar_reporte(request):
     context = {
         'desde': desde,
         'hasta': hasta,
-        'compras': compras
+        'compras': compras,
+        'total_cantidad': total_cantidad,
+        'total_total': total_total
     }
 
     template = get_template('reporte_compras.html')
